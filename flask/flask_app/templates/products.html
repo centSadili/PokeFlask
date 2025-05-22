@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Roster - PokéFan App</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pokemon-blue: #3b4cca;
+            --pokemon-yellow: #ffcb05;
+            --pokemon-red: #e3350d;
+            --dark-blue: #2a3ba8;
+            --light-gray: #f8fafc;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #4a5568;
+            --text-primary: #2d3748;
+            --white: #ffffff;
+            --success-green: #48bb78;
+            --warning-orange: #ed8936;
+            --error-red: #f56565;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Skip to main content for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--pokemon-blue);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Navigation improvements */
+        nav {
+            background: linear-gradient(135deg, var(--pokemon-yellow) 0%, #ffd700 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--pokemon-blue);
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pokemon-blue);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--pokemon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: rgba(59, 76, 202, 0.1);
+            color: var(--dark-blue);
+            transform: translateY(-2px);
+            outline: 2px solid var(--pokemon-blue);
+            outline-offset: 2px;
+        }
+
+        .nav-links a.active {
+            background: var(--pokemon-blue);
+            color: white;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--pokemon-blue);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Hero section */
+        header {
+            background: linear-gradient(135deg, var(--pokemon-blue) 0%, #5a67d8 100%);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: #e2e8ff;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        main {
+            padding: 4rem 0;
+        }
+
+        /* Filter/Search section */
+        .filter-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(59, 76, 202, 0.1);
+            text-align: center;
+        }
+
+        .filter-section h2 {
+            color: var(--pokemon-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light-gray);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--pokemon-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(59, 76, 202, 0.1);
+        }
+
+        /* Pokemon grid */
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pokemon-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+
+        .pokemon-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--pokemon-blue), var(--pokemon-red));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--pokemon-blue);
+        }
+
+        .pokemon-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .pokemon-card h3 {
+            color: var(--pokemon-red);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pokemon-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin: 1rem auto;
+            border-radius: 50%;
+            background: var(--white);
+            padding: 1rem;
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pokemon-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .pokemon-card p {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            margin: 1rem 0;
+        }
+
+        .pokemon-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--pokemon-blue), var(--dark-blue));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-light);
+        }
+
+        .type-badge {
+            display: inline-block;
+            background: var(--pokemon-blue);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .type-badge.electric { background: #f4d03f; color: #333; }
+        .type-badge.fire { background: #e74c3c; }
+        .type-badge.flying { background: #85c1e9; color: #333; }
+        .type-badge.grass { background: #58d68d; color: #333; }
+        .type-badge.poison { background: #a569bd; }
+        .type-badge.ghost { background: #6c5ce7; }
+        .type-badge.fairy { background: #fd79a8; color: #333; }
+        .type-badge.ground { background: #d2b48c; color: #333; }
+        .type-badge.fighting { background: #c0392b; }
+        .type-badge.psychic { background: #e17055; }
+        .type-badge.rock { background: #8d7053; }
+
+        /* Loading animation */
+        .pokemon-card img {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Stats section for each Pokemon */
+        .pokemon-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--pokemon-blue);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #a0aec0;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pokemon-blue), var(--pokemon-red), var(--pokemon-yellow));
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--pokemon-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--pokemon-red);
+            transform: scale(1.1);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--pokemon-yellow);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+                box-shadow: var(--shadow-medium);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav {
+                padding: 1rem;
+            }
+            
+            header {
+                padding: 3rem 1rem 2rem;
+            }
+            
+            .filter-section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .pokemon-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .pokemon-card {
+                padding: 1.5rem;
+            }
+            
+            main {
+                padding: 2rem 0;
+            }
+        }
+
+        /* Focus indicators for better accessibility */
+        *:focus {
+            outline: 2px solid var(--pokemon-blue);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --pokemon-blue: #000080;
+                --pokemon-red: #8B0000;
+                --text-primary: #000000;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <nav role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-brand" aria-label="PokéFan home">PokéFan</a>
+        <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/products" class="active" aria-current="page">Pokémon</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/policy">Policy</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Sign Up</a></li>
+        </ul>
+    </nav>
+
+    <header role="banner">
+        <h1>Pokémon Roster</h1>
+        <p>Catch a glimpse of some of our favorite Pokémon from every region! Explore their unique abilities and characteristics.</p>
+    </header>
+
+    <main id="main-content" class="container">
+        <section class="filter-section">
+            <h2>Find Your Favorite Pokémon</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search Pokémon by name or number..." id="searchInput">
+            </div>
+        </section>
+
+        <div class="pokemon-grid" id="pokemonGrid">
+            <div class="pokemon-card" data-name="pikachu" data-number="025">
+                <h3>Pikachu</h3>
+                <div class="type-badge electric">Electric</div>
+                <img src="https://img.pokemondb.net/artwork/pikachu.jpg" alt="Pikachu - Electric-type Pokémon">
+                <p>The iconic Electric-type Pokémon known for its loyalty and powerful Thunderbolt attacks. Pikachu stores electricity in its cheek pouches.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">0.4m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">6.0kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#025</div>
+            </div>
+
+            <div class="pokemon-card" data-name="charizard" data-number="006">
+                <h3>Charizard</h3>
+                <div class="type-badge fire">Fire</div>
+                <div class="type-badge flying">Flying</div>
+                <img src="https://img.pokemondb.net/artwork/charizard.jpg" alt="Charizard - Fire/Flying-type Pokémon">
+                <p>A Fire/Flying-type with fierce battle skills and the power to breathe fire hot enough to melt almost anything. A fan favorite starter evolution.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.7m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">90.5kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#006</div>
+            </div>
+
+            <div class="pokemon-card" data-name="bulbasaur" data-number="001">
+                <h3>Bulbasaur</h3>
+                <div class="type-badge grass">Grass</div>
+                <div class="type-badge poison">Poison</div>
+                <img src="https://img.pokemondb.net/artwork/bulbasaur.jpg" alt="Bulbasaur - Grass/Poison-type Pokémon">
+                <p>Starter Grass/Poison-type known for its calm demeanor and solar-powered attacks. The bulb on its back grows as it evolves.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">0.7m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">6.9kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#001</div>
+            </div>
+
+            <div class="pokemon-card" data-name="gengar" data-number="094">
+                <h3>Gengar</h3>
+                <div class="type-badge ghost">Ghost</div>
+                <div class="type-badge poison">Poison</div>
+                <img src="https://img.pokemondb.net/artwork/gengar.jpg" alt="Gengar - Ghost/Poison-type Pokémon">
+                <p>A mischievous Ghost/Poison-type that hides in shadows and spooks its foes. Known for its playful yet eerie pranks.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.5m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">40.5kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#094</div>
+            </div>
+
+            <div class="pokemon-card" data-name="clefairy" data-number="035">
+                <h3>Clefairy</h3>
+                <div class="type-badge fairy">Fairy</div>
+                <img src="https://img.pokemondb.net/artwork/clefairy.jpg" alt="Clefairy - Fairy-type Pokémon">
+                <p>A Fairy-type Pokémon introduced in Generation 1, known for its moonlit dances and adorable appearance. Lives on Mt. Moon.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">0.6m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">7.5kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#035</div>
+            </div>
+
+            <div class="pokemon-card" data-name="dugtrio" data-number="051">
+                <h3>Dugtrio</h3>
+                <div class="type-badge ground">Ground</div>
+                <img src="https://img.pokemondb.net/artwork/dugtrio.jpg" alt="Dugtrio - Ground-type Pokémon">
+                <p>Ground-type Pokémon famous for its trio teamwork and underground speed. Can tunnel under the earth at 60 mph.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">0.7m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">33.3kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#051</div>
+            </div>
+
+            <div class="pokemon-card" data-name="arcanine" data-number="059">
+                <h3>Arcanine</h3>
+                <div class="type-badge fire">Fire</div>
+                <img src="https://img.pokemondb.net/artwork/arcanine.jpg" alt="Arcanine - Fire-type Pokémon">
+                <p>A noble Fire-type Pokémon known for its speed and legendary status. Revered in ancient times as a legendary creature.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.9m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">155.0kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#059</div>
+            </div>
+
+            <div class="pokemon-card" data-name="machamp" data-number="068">
+                <h3>Machamp</h3>
+                <div class="type-badge fighting">Fighting</div>
+                <img src="https://img.pokemondb.net/artwork/machamp.jpg" alt="Machamp - Fighting-type Pokémon">
+                <p>Fighting-type Pokémon with four arms and devastating physical strength. Can throw 500 punches per second with all four arms.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.6m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">130.0kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#068</div>
+            </div>
+
+            <div class="pokemon-card" data-name="mightyena" data-number="262">
+                <h3>Mightyena</h3>
+                <div class="type-badge">Dark</div>
+                <img src="https://img.pokemondb.net/artwork/mightyena.jpg" alt="Mightyena - Dark-type Pokémon">
+                <p>Dark-type Pokémon with a pack mentality and loyal instincts. Lives in packs and is fiercely loyal to its trainer.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">III</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.0m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">37.0kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#262</div>
+            </div>
+
+            <div class="pokemon-card" data-name="alakazam" data-number="065">
+                <h3>Alakazam</h3>
+                <div class="type-badge psychic">Psychic</div>
+                <img src="https://img.pokemondb.net/artwork/alakazam.jpg" alt="Alakazam - Psychic-type Pokémon">
+                <p>Psychic-type Pokémon known for its incredibly high intelligence and telepathy. Its brain never stops growing.</p>
+                <div class="pokemon-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Gen</div>
+                        <div class="stat-value">I</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Height</div>
+                        <div class="stat-value">1.5m</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Weight</div>
+                        <div class="stat-value">48.0kg</div>
+                    </div>
+                </div>
+                <div class="pokemon-number">#065</div>
+            </div>
+
+            <div class="pokemon-card" data-name="lugia" data-number="249">
+                <h3>Lugia</h3>
+                <div class="type-badge psychic">Psychic</div>
+                <div class="type-badge flying">Flying</div>
+                <img src="https://img.pokemondb.net/artwork/lugia.jpg" alt="Lugia - Psychic/Flying-type Pokémon">
+                <p>A legendary Psychic/Flying-type

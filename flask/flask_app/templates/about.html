@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Pokémon Fan App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pokemon-blue: #3b4cca;
+            --pokemon-yellow: #ffcb05;
+            --pokemon-red: #e3350d;
+            --dark-blue: #2a3ba8;
+            --light-gray: #f8fafc;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #4a5568;
+            --text-primary: #2d3748;
+            --white: #ffffff;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Skip to main content for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--pokemon-blue);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Navigation improvements */
+        nav {
+            background: linear-gradient(135deg, var(--pokemon-yellow) 0%, #ffd700 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--pokemon-blue);
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pokemon-blue);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--pokemon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: rgba(59, 76, 202, 0.1);
+            color: var(--dark-blue);
+            transform: translateY(-2px);
+            outline: 2px solid var(--pokemon-blue);
+            outline-offset: 2px;
+        }
+
+        .nav-links a.active {
+            background: var(--pokemon-blue);
+            color: white;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--pokemon-blue);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Hero section improvements */
+        header {
+            background: linear-gradient(135deg, var(--pokemon-blue) 0%, #5a67d8 100%);
+            color: white;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: #e2e8ff;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--pokemon-red);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button:hover,
+        .cta-button:focus {
+            background: #c92a07;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(227, 53, 13, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        /* Card improvements */
+        .content-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 76, 202, 0.1);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .section-title {
+            color: var(--pokemon-blue);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pokemon-red), #ff4757);
+            border-radius: 2px;
+        }
+
+        .content-text {
+            font-size: 1.15rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Team grid improvements */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pokemon-blue), #5a67d8, var(--pokemon-red));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(59, 76, 202, 0.2);
+            border-color: rgba(59, 76, 202, 0.3);
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--pokemon-blue), var(--pokemon-red));
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .team-card h3 {
+            color: var(--pokemon-red);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .team-card p {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Stats section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border-left: 5px solid var(--pokemon-blue);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--pokemon-red);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--dark-gray);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer improvements */
+        footer {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #a0aec0;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pokemon-blue), var(--pokemon-red), var(--pokemon-yellow));
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--pokemon-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover,
+        .back-to-top:focus {
+            background: var(--pokemon-red);
+            transform: scale(1.1);
+        }
+
+        /* Responsive design improvements */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--pokemon-yellow);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+                box-shadow: var(--shadow-medium);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav {
+                padding: 1rem;
+            }
+            
+            header {
+                padding: 4rem 1rem 3rem;
+            }
+            
+            .content-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Loading animation */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Focus indicators for better accessibility */
+        *:focus {
+            outline: 2px solid var(--pokemon-blue);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --pokemon-blue: #000080;
+                --pokemon-red: #8B0000;
+                --text-primary: #000000;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <nav role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-brand" aria-label="PokéFan home">PokéFan</a>
+        <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about" class="active" aria-current="page">About</a></li>
+            <li><a href="/products">Pokémon</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/policy">Policy</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Sign Up</a></li>
+        </ul>
+    </nav>
+
+    <header role="banner">
+        <h1>About the PokéFan Project</h1>
+        <p>Celebrating the world of Pokémon through fan-powered passion and innovative web development!</p>
+        <a href="/products" class="cta-button">Explore Pokémon</a>
+    </header>
+
+    <main id="main-content" class="container">
+        <section class="fade-in">
+            <div class="content-card">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="content-text">
+                    We're dedicated Pokémon fans building a comprehensive digital Pokédex using modern Flask technology. Our mission is to provide new and veteran trainers with a fun, informative, and beautifully crafted online experience to learn about Pokémon, explore evolutionary paths, discover type advantages, and track their favorite creatures.
+                </p>
+                <p class="content-text">
+                    Through careful research and passionate development, we aim to create the most user-friendly and visually appealing Pokémon database on the web, helping trainers of all levels enhance their knowledge and appreciation for these incredible creatures.
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">150+</span>
+                        <div class="stat-label">Pokémon Documented</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">18</span>
+                        <div class="stat-label">Types Covered</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1000+</span>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <div class="stat-label">Available</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2 class="section-title">Meet The Team</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">R</div>
+                        <h3>Red</h3>
+                        <p>The legendary trainer who inspired us all. As our lead strategist, Red brings years of battle experience and tactical knowledge to help structure our Pokémon data in the most useful way possible.</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar">O</div>
+                        <h3>Professor Oak</h3>
+                        <p>Pokémon researcher and mentor extraordinaire. His extensive knowledge of Pokémon behavior, evolution, and habitats guides our research methodology and ensures accuracy in every entry.</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar">M</div>
+                        <h3>Misty</h3>
+                        <p>Water-type specialist and our lead designer. Misty's eye for aesthetics and user experience design helps make our platform both beautiful and intuitive for trainers of all ages.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 PokéFan Flask App | This is a non-commercial fan-made site created with ❤️ for the Pokémon community</p>
+    </footer>
+
+    <button class="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            navLinks.classList.toggle('active');
+        });
+
+        // Back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('nav')) {
+                navLinks.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Add fade-in animation to cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .team-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Keyboard navigation improvements
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.focus();
+            }
+        });
+    </script>
+</body>
+</html>
